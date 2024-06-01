@@ -1,0 +1,6 @@
+version: '3.8'
+services:
+  api-asynchronous-service:
+    build: ./asynchronousApi/
+    ports:
+      - "5001:5001"
