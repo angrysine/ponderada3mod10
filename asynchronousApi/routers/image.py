@@ -2,14 +2,11 @@ from fastapi import APIRouter, UploadFile
 import numpy as np
 import cv2
 import base64
+import math
 
 router = APIRouter()
 
-#import cv2, numpy and matplotlib libraries
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-import math
+
 
 def fazol(img):
 
@@ -39,6 +36,7 @@ def fazol(img):
 @router.post("/uploadfile/")
 async def create_upload_file(file: UploadFile):
     contents = await file.read()
+    file.close()
     nparr = np.fromstring(contents, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     newImg = fazol(img)
@@ -46,6 +44,6 @@ async def create_upload_file(file: UploadFile):
     _, encoded_img = cv2.imencode('.PNG', newImg)
 
     encoded_img = base64.b64encode(encoded_img)
-
-    return {"filename": file.filename}
+    
+    return {"file": encoded_img}
 

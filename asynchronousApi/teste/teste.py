@@ -1,7 +1,7 @@
 #import cv2, numpy and matplotlib libraries
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+
 import math
 
 def fazol(img):
