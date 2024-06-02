@@ -1,11 +1,24 @@
 import "dart:convert";
-
+import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/material.dart";
 import "package:frontend/form.dart";
 import "package:frontend/functions.dart";
 import "package:frontend/task.dart";
 
 void main() {
+  AwesomeNotifications().initialize(
+    null, // Replace with your app icon
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic tests',
+        defaultColor: Color(0xFF9D50DD),
+        ledColor: Colors.white,
+      ),
+    ],
+  );
+  AwesomeNotifications().requestPermissionToSendNotifications();
   runApp(const MyApp());
 }
 

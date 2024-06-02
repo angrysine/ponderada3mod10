@@ -12,9 +12,10 @@ class ImageProcesser extends StatefulWidget {
 
 class _ImageProcesserState extends State<ImageProcesser> {
   @override
+  Image? bob;
   Widget build(BuildContext context) {
-    return Container(
-      child: ImageInput(
+    return Column(children: [
+      ImageInput(
         allowEdit: true,
         allowMaxImage: 5,
         onImageSelected: (image, index) async {
@@ -25,8 +26,29 @@ class _ImageProcesserState extends State<ImageProcesser> {
           var response =
               await sendImage(File(image.path), await getTokenFromStorage());
           print(response);
+          setState(() {
+            bob = imageFromBase64String(response);
+            createNotification("sua imagem foi processada", "fazol");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                            body: Column(children: [
+                          bob!,
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.green),
+                            ),
+                            child: const Text('Voltar'),
+                          )
+                        ]))));
+          });
         },
       ),
-    );
+    ]);
   }
 }

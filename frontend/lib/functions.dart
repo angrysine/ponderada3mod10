@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import "dart:convert";
 import "package:awesome_notifications/awesome_notifications.dart";
-
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 
 var urlBase = "44.193.127.173";
 const storage = FlutterSecureStorage();
@@ -88,14 +87,14 @@ Future<String?> getTokenFromStorage() async {
   return await storage.read(key: 'token');
 }
 
-Future<void> createNotification(title, body, bigPicture) async {
+Future<void> createNotification(title, body) async {
   await AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 10,
       channelKey: 'basic_channel',
       title: title,
       body: body,
-      // bigPicture: "https://bit.ly/fcc-running-cats",
+      bigPicture: "https://bit.ly/fcc-running-cats",
     ),
   );
 }
@@ -103,7 +102,7 @@ Future<void> createNotification(title, body, bigPicture) async {
 Future<String> sendImage(File file, token) async {
   var request = http.MultipartRequest(
     'POST',
-    Uri.parse('http://$urlBase:5001/uploadfile'),
+    Uri.parse('http://$urlBase:5001/uploadfile/'),
   );
   request.headers['Authorization'] = 'Bearer $token';
   request.files.add(
@@ -114,6 +113,10 @@ Future<String> sendImage(File file, token) async {
   );
   var response = await request.send();
   print(response.statusCode);
-  print(await response.stream.bytesToString());
-  return await response.stream.bytesToString();
+  var json = jsonDecode(await response.stream.bytesToString());
+  return json["file"];
+}
+
+Image imageFromBase64String(String base64String) {
+  return Image.memory(base64Decode(base64String), fit: BoxFit.scaleDown);
 }
