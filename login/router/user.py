@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends 
 import sqlite3
-from models.user import User
-from models.task import Task
+from interfaces.user import User
 from passlib.context import CryptContext
 from middleware.auth import verify_password, get_password_hash, generate_token, oauth2_scheme, validate_token
 from typing_extensions import Annotated
@@ -43,7 +42,5 @@ async def login(user: User):
 
 @router.get('/getUser')
 async def getUser(token: Annotated[str, Depends(oauth2_scheme)]):
-    con = sqlite3.connect("sqlite.db")
-    cur = con.cursor()
     username = validate_token(token)
     return {"user": username}

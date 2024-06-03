@@ -1,6 +1,14 @@
 version: '3.8'
 services:
-  api-asynchronous-service:
+  api-asynchronous:
+    environment:
+      - PYTHONUNBUFFERED=1
     build: ./asynchronousApi/
     ports:
       - "5001:5001"
+    depends_on:
+      - login
+  login:
+    build: ./login/
+    ports:
+      - "5002:5002"

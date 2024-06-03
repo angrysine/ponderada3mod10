@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 import sqlite3
 from models.task import Task, TaskWithoutContent, TaskStatus
-from routers.user import getUser
+from middleware.user import getUser
 from typing_extensions import Annotated
 
 router = APIRouter()
