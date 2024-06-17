@@ -27,7 +27,10 @@ async def addTask(task:Task,token:Annotated[dict, Depends(getUser)]):
 async def getTasks( token:Annotated[dict, Depends(getUser)]):
     con = sqlite3.connect("sqlite.db")
     cur = con.cursor()
-    username = token['user']
+    try:
+        username = token['user']
+    except:
+        raise token
     cur.execute("SELECT * FROM tasks WHERE username = ?", (username,))
     tasks = cur.fetchall()
     tasks = [{"title": task[0], "content": task[1], "status" : task[3]} for task in tasks]
@@ -37,7 +40,10 @@ async def getTasks( token:Annotated[dict, Depends(getUser)]):
 async def deleteTask(task: TaskWithoutContent, token:Annotated[dict, Depends(getUser)]):
     con = sqlite3.connect("sqlite.db")
     cur = con.cursor()
-    username = token['user']
+    try:
+        username = token['user']
+    except:
+        raise token
     title = task.title
     cur.execute("SELECT * FROM tasks WHERE title = ? AND username = ?", (title, username,))
     task = cur.fetchone()
@@ -51,7 +57,10 @@ async def deleteTask(task: TaskWithoutContent, token:Annotated[dict, Depends(get
 async def updateTask(task: Task,token : Annotated[dict, Depends(getUser)]):
     con = sqlite3.connect("sqlite.db")
     cur = con.cursor()
-    username = token['user']
+    try:
+        username = token['user']
+    except:
+        raise token
     title = task.title
     content = task.content
     cur.execute("SELECT * FROM tasks WHERE title = ? AND username = ?", (title, username))
@@ -66,7 +75,10 @@ async def updateTask(task: Task,token : Annotated[dict, Depends(getUser)]):
 async def updateTask(task: TaskStatus,token : Annotated[dict, Depends(getUser)]):
     con = sqlite3.connect("sqlite.db")
     cur = con.cursor()
-    username = token['user']
+    try:
+        username = token['user']
+    except:
+        raise token
     title = task.title
     status = task.status
     cur.execute("SELECT * FROM tasks WHERE title = ? AND username = ?", (title, username))

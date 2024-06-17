@@ -1,8 +1,13 @@
-#import cv2, numpy and matplotlib libraries
-import cv2
+from fastapi import FastAPI
+from fastapi import UploadFile
 import numpy as np
-
+import cv2
+import base64
 import math
+
+app = FastAPI()
+
+
 
 def fazol(img):
 
@@ -26,13 +31,26 @@ def fazol(img):
     # Copy the horizontal part of the L shape
     img4[h - math.floor(k1 * h):h, b:b + math.floor(w * k2), :] = img[h - math.floor(k1 * h):h, b:b + math.floor(w * k2), :]
 
-    # Display the transformed image
-    cv2.imshow("Transformed Image", img4)
+    return img4
 
-    # Hold the window
-    cv2.waitKey(0)
 
-    # It is for removing/deleting created GUI window from screen and memory
-    cv2.destroyAllWindows()
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile):
+    contents = await file.read()
+    file.close()
+    nparr = np.fromstring(contents, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    newImg = fazol(img)
+     # line that fixed it
+    _, encoded_img = cv2.imencode('.PNG', newImg)
 
-fazol(cv2.imread("murilo.jpeg", cv2.IMREAD_COLOR))
+    encoded_img = base64.b64encode(encoded_img)
+    
+    return {"file": encoded_img}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, port = 5005)
+
+
+

@@ -1,14 +1,81 @@
 version: '3.8'
 services:
-  api-asynchronous:
+  task_manager:
     environment:
       - PYTHONUNBUFFERED=1
-    build: ./asynchronousApi/
+    build: ./taskManager/
     ports:
       - "5001:5001"
     depends_on:
       - login
+      - logger
+      - redis
+    container_name: task_manager
   login:
     build: ./login/
     ports:
       - "5002:5002"
+  gateway:
+    build: ./gateway
+    ports: 
+      -   5003:80
+    depends_on:
+      - task_manager
+      - login
+      - logger
+    restart: on-failure
+  
+    
+  # bridge:
+  #   image: rabbitmq:latest
+  #   volumes:
+  #     - $PWD/bridge:/var/lib/rabbitmq 
+  #   ports:
+  #     - "5672:5672"
+  #   container_name: bridge
+  
+  logger:
+    environment:
+      - PYTHONUNBUFFERED=1
+    build: ./logger/  
+    ports:
+      - "5004:5004"
+    depends_on:
+      database : 
+        condition: service_healthy
+
+  database:
+    image: postgres
+    volumes:
+      - $PWD/database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: fazol
+      POSTGRES_USER: fazol
+      POSTGRES_DB: fazol
+      POSTEGRES_PORT: 5432
+    ports:
+      - "5432:5432"
+    container_name: database
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fazol"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    container_name: redis
+
+  image:
+    build: ./image
+    ports:
+      - "5005:5005"
+    depends_on:
+      - task_manager
+      - logger
+      - redis
+    container_name: image
+
+    

@@ -1,0 +1,16 @@
+FROM python:latest
+
+WORKDIR /app
+
+COPY . .
+
+ENV PYTHONPATH "${PYTHONPATH}:/app/"
+
+RUN pip install --upgrade pip
+
+RUN pip install -r requirements.txt
+
+#eu odeio cv2 como que tenho que saber que preciso importar isso
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
+CMD ["python", "app.py"]
