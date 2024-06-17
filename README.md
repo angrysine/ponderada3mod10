@@ -1,4 +1,4 @@
-# Super Ponderada.
+# Super Ponderada
 
 Esse projeto serve como ponderada 3, 4 e a ponderada extra. Ele contem um gerenciador de tarefas.
 
@@ -20,6 +20,20 @@ O projeto é dividido em 3 partes:
 - Login: é o serviço que gerencia o login. Ele permite criar, editar e visualizar usuários. Ele é chamado pelo task manager para verificar se o usuário está logado e retornar o id do usuário que permite que o task manager puxe as tasks do usuário correto.
 - image processor: é o serviço que processa a imagem. Ele recebe uma imagem e retorna a imagem com um filtro aplicado. Ele é chamado pelo frontend para transformar uma imagem em um L.
 - Logger: é o serviço que loga as requisições. Ele é chamado por todos os outros serviços para logar as requisições feitas.
+
+## Como rodar
+
+Pela dockerização da api somente é necessário rodar para o back:
+
+```bash
+docker-compose up
+```
+
+Para rodar o frontend é necessário ter o flutter instalado e rodar:
+
+```bash
+flutter run
+```
 
 ## Demonstração
 
