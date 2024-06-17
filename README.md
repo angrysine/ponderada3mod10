@@ -16,9 +16,9 @@ O projeto é dividido em 3 partes:
   
 ### Mircrosserviços
 
-- Task Manager: é o serviço que gerencia as tasks. Ele permite criar, editar e visualizar tasks. Chama o serviço de login para verificar se o usuário está logado e determinar as tasks que devem ser puxadas baseado no usuário. O sistema de task utiliza redis para armazenar a verificação de login tendo time to live um pouco menor do que o tempo de expiração do token.
+- Task Manager: é o serviço que gerencia as tasks. Ele permite criar, editar e visualizar tasks. Chama o serviço de login para verificar se o usuário está logado e determinar as tasks que devem ser puxadas baseado no usuário. O sistema de task utiliza redis para armazenar a verificação de login tendo time to live um pouco menor do que o tempo de expiração do token. Utiliza uma fila para processar as imagens. Ele é chamado pelo frontend para criar, editar e visualizar tasks.
 - Login: é o serviço que gerencia o login. Ele permite criar, editar e visualizar usuários. Ele é chamado pelo task manager para verificar se o usuário está logado e retornar o id do usuário que permite que o task manager puxe as tasks do usuário correto.
-- image processor: é o serviço que processa a imagem. Ele recebe uma imagem e retorna a imagem com um filtro aplicado. Ele é chamado pelo frontend para transformar uma imagem em um L.
+- image processor: é o serviço que processa a imagem. Ele recebe uma imagem e retorna a imagem com um filtro aplicado. Ele é chamado pelo task manager para transformar uma imagem em um L.
 - Logger: é o serviço que loga as requisições. Ele é chamado por todos os outros serviços para logar as requisições feitas.
 
 ## Como rodar
